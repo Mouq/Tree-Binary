@@ -6,7 +6,7 @@ class Tree::Binary {
     has Tree::Binary $.left is rw;
     has Tree::Binary $.right is rw;
     has Tree::Binary $.parent is rw;
-    has Mu $.value is rw;
+    has $.value is rw;
 
     method spawn (Tree::Binary $p is rw) {
         # No parent wants their children
@@ -16,21 +16,22 @@ class Tree::Binary {
     }
 
     # So one can use them immediately
-    method left {
-        $.left // $.left.new.spawn(self)
+    method left is rw {
+        $!left // ($!left .= new).spawn(self);
     }
-    method right {
-        $.right // $.right.new.spawn(self)
+    method right is rw {
+        $!right // ($!right .= new).spawn(self);
     }
 
-    method root {
+    method root is rw {
         $.parent ?? $.parent.root !! self
     }
 
     multi method traverse (Code &func) {
         &func(self);
-        $.left.traverse(&func) if self.left;
-        $.right.traverse(&func) if self.right;
+        $.left.traverse(&func) if $.left;
+        $.right.traverse(&func) if $.right;
+        self;
     }
 
     method mirror {
