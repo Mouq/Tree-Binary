@@ -3,53 +3,63 @@ use v6;
 # Designed to be subclassed
 
 class Tree::Binary {
-    has Tree::Binary $.parent;
-    has Tree::Binary $.left;
-    has Tree::Binary $.right;
-    has Mu $.value;
+    has Tree::Binary $.left is rw;
+    has Tree::Binary $.right is rw;
+    has Tree::Binary $.parent is rw;
+    has Mu $.value is rw;
+
+    method spawn (Tree::Binary $p is rw) {
+        # No parent wants their children
+        # thinking that they're orphans
+        $!parent := $p;
+        self;
+    }
+
+    # So one can use them immediately
+    method left {
+        $.left // $.left.new.spawn(self)
+    }
+    method right {
+        $.right // $.right.new.spawn(self)
+    }
     
     method leftIsTree {
-        self.left ~~ Tree::Binary
+        $.left ~~ Tree::Binary
     }
 
     method rightIsTree {
-        self.right ~~ Tree::Binary
+        $.right ~~ Tree::Binary
     }
 
     method root {
-        self.parent ?? self.parent.root !! self
-    }
-
-    method spawn (Tree::Binary $p is rw) {
-        self.parent := $p;
-        self;
+        $.parent ?? $.parent.root !! self
     }
 
     multi method traverse (Code &func) {
         &func(self);
-        self.left.traverse(&func) if self.leftIsTree;
-        self.right.traverse(&func) if self.rightIsTree;
+        $.left.traverse(&func) if self.leftIsTree;
+        $.right.traverse(&func) if self.rightIsTree;
     }
 
     method mirror {
         # swap left for right
-        (self.left, self.right) = (self.right, self.left);
+        ($.left, $.right) = ($.right, $.left);
         # and recurse
-        self.left.mirror if self.left;
-        self.right.mirror if self.right;
+        $.left.mirror if $.left;
+        $.right.mirror if $.right;
         self;
     }
 
     method size {
         my $size = 1;
-        $size += self.left.size if self.left;
-        $size += self.right.size if self.right;
+        $size += $.left.size if $.left;
+        $size += $.right.size if $.right;
     }
 
     method height {
         my ($left_height, $right_height) = (0, 0);
-        $left_height = self.left.height() if self.left;
-        $right_height = self.right.height() if self.right;
+        $left_height = $.left.height() if $.left;
+        $right_height = $.right.height() if $.right;
         return 1 + max($left_height, $right_height);
     }
 }
