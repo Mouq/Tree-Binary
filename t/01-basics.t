@@ -19,7 +19,7 @@ my Tree::Binary $tree .= new;
     my $branch := $tree.right.left.right;
     $branch.value = "pear";
     is $branch.value, $tree.right.left.right.value;
-    is $tree.right.left.right.value, "pear", "Binding branches works";
+    is $tree.right.left.right.value, "pear", "Binding branches";
 
     my $squirrel = Tree::Binary.new;
     lives_ok { for ^40 { pick(^1) ?? $squirrel .= left !! $squirrel .= right } }, "Arbitrary traversal";
@@ -31,9 +31,17 @@ $tree .= new;
     $tree.value = "coconut";
     # \🌴 = …
     my $palm = $tree.left.left.left;
-    is $palm.root.value, "coconut", ".root works";
+    is $palm.root.value, "coconut", ".root";
 
     $tree.left.left.value = "bark"; 
-    is $palm.parent.value, "bark", ".parent works";
+    is $palm.parent.value, "bark", ".parent";
 }
 
+$tree .= new;
+# Assigning and manipulating sub-trees
+{
+    my $branch = Tree::Binary.new;
+    $branch.right.value = 42;
+    $tree.left = $branch;
+    is $tree.left.right, 42, "Assigning sub-trees to tree branches";
+}
