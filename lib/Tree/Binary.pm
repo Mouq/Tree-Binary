@@ -22,14 +22,6 @@ class Tree::Binary {
     method right {
         $.right // $.right.new.spawn(self)
     }
-    
-    method leftIsTree {
-        $.left ~~ Tree::Binary
-    }
-
-    method rightIsTree {
-        $.right ~~ Tree::Binary
-    }
 
     method root {
         $.parent ?? $.parent.root !! self
@@ -37,8 +29,8 @@ class Tree::Binary {
 
     multi method traverse (Code &func) {
         &func(self);
-        $.left.traverse(&func) if self.leftIsTree;
-        $.right.traverse(&func) if self.rightIsTree;
+        $.left.traverse(&func) if self.left;
+        $.right.traverse(&func) if self.right;
     }
 
     method mirror {
