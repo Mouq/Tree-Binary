@@ -3,7 +3,7 @@ use v6;
 use Test;
 use Tree::Binary;
 
-plan 9;
+plan 8;
 
 my Tree::Binary $tree .= new;
 
@@ -39,11 +39,3 @@ $tree .= new;
     is $maple.parent.value, "bark", ".parent";
 }
 
-$tree .= new;
-# Assigning and manipulating sub-trees
-{
-    my $branch = Tree::Binary.new;
-    $branch.right.value = 42;
-    $tree.left = $branch;
-    is $tree.left.right.value, 42, "Assigning sub-trees to tree branches";
-}
