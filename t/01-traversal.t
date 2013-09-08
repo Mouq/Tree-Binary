@@ -3,7 +3,7 @@ use v6;
 use Test;
 use Tree::Binary;
 
-plan 8;
+plan 9;
 
 my Tree::Binary $tree .= new;
 
@@ -37,5 +37,19 @@ $tree .= new;
     $tree.left.left.value = "bark"; 
     is $palm.parent.value, "bark", ".parent";
     is $maple.parent.value, "bark", ".parent";
+}
+
+$tree .= new;
+# Traverse with function
+{
+    $tree.left.value = "a";
+    $tree.value = "b";
+    $tree.right.value = "l";
+    $tree.right.left.value = "d";
+    $tree.right.right.value = "o";
+
+    my @v;
+    $tree.traverse({@v.push(.value)});
+    is @v.sort, $tree.list.sort, ".traverse";
 }
 

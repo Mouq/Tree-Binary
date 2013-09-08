@@ -38,32 +38,40 @@ class Tree::Binary {
         $.parent ?? $.parent.root !! self
     }
 
-    multi method traverse (Code &func) {
+    multi method list {
+        my @r;
+        @r.push($.left.list ) if $!left;
+        @r.push($.value     ) if $!value;
+        @r.push($.right.list) if $!right;
+        @r;
+    }
+
+    method traverse (&func) {
         &func(self);
-        $.left.traverse(&func) if $.left;
-        $.right.traverse(&func) if $.right;
+        $.left.traverse(&func) if $!left;
+        $.right.traverse(&func) if $!right;
         self;
     }
 
     method mirror {
         # swap left for right
-        ($.left, $.right) = ($.right, $.left);
+        ($!left, $!right) = ($!right, $!left);
         # and recurse
-        $.left.mirror if $.left;
-        $.right.mirror if $.right;
+        $.left.mirror if $!left;
+        $.right.mirror if $!right;
         self;
     }
 
     method size {
         my $size = 1;
-        $size += $.left.size if $.left;
-        $size += $.right.size if $.right;
+        $size += $.left.size if $!left;
+        $size += $.right.size if $!right;
     }
 
     method height {
         my ($left_height, $right_height) = (0, 0);
-        $left_height = $.left.height() if $.left;
-        $right_height = $.right.height() if $.right;
+        $left_height = $.left.height() if $!left;
+        $right_height = $.right.height() if $!right;
         return 1 + max($left_height, $right_height);
     }
 }
