@@ -16,11 +16,22 @@ class Tree::Binary {
     }
 
     # So one can use them immediately
-    method left is rw {
+    multi submethod left is rw {
         $!left // ($!left .= new).spawn(self);
+        $!left;
     }
-    method right is rw {
+    multi submethod right is rw {
         $!right // ($!right .= new).spawn(self);
+        $!right;
+    }
+
+    multi submethod left (Tree::Binary $t) {
+        $!left = Tree::Binary.new($t);
+        $!left;
+    }
+    multi submethod right (Tree::Binary $t) {
+        $!right = Tree::Binary.new($t);
+        $!right;
     }
 
     method root is rw {

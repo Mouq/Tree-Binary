@@ -3,7 +3,7 @@ use v6;
 use Test;
 use Tree::Binary;
 
-plan 7;
+plan 9;
 
 my Tree::Binary $tree .= new;
 
@@ -31,10 +31,12 @@ $tree .= new;
     $tree.value = "coconut";
     # \🌴 = …
     my $palm = $tree.left.left.left;
+    my $maple = $tree.left.left.right;
     is $palm.root.value, "coconut", ".root";
 
     $tree.left.left.value = "bark"; 
     is $palm.parent.value, "bark", ".parent";
+    is $maple.parent.value, "bark", ".parent";
 }
 
 $tree .= new;
@@ -43,5 +45,5 @@ $tree .= new;
     my $branch = Tree::Binary.new;
     $branch.right.value = 42;
     $tree.left = $branch;
-    is $tree.left.right, 42, "Assigning sub-trees to tree branches";
+    is $tree.left.right.value, 42, "Assigning sub-trees to tree branches";
 }
